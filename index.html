@@ -16,13 +16,13 @@
     <!-- <link rel="stylesheet" href="assets/css/pendu.css"> -->
     <style>
         #mot {
-            font-size: 36px;
+            font-size: 20px;
             letter-spacing: 10px;
             margin: 20px 0;
         }
 
         #lettres button {
-            font-size: 24px;
+            font-size: 20px;
             margin: 5px;
         }
 
@@ -124,9 +124,15 @@
                         <div class="col-md-12 grid-margin stretch-card">
                             <div class="card">
                                 <div class="card-body">
-                                    <button id="demarrer">Démarrer</button>
-                                    <button id="temps">90 </button>
-                                    <button id="score">SCORE : 0</button>
+                                    <div class="text-center">
+
+                                        <button id="demarrer">Démarrer</button>
+                                    </div>
+                                    <br>
+                                    <div class="text-center">
+                                        <button id="temps">90 </button>
+                                        <button id="score">SCORE : 0</button>
+                                    </div>
                                     <div class="mt-3 text-center" id="message_alerte"></div>
                                     <audio id="audio" src="assets/audio/batiment_mp3_85595.mp3" controls hidden></audio>
                                     <div class="text-center" id="mot"></div>
@@ -248,6 +254,7 @@
 
             $("#demarrer").click(function () {
                 tempsRestant = 90; // Réinitialise le temps restant
+                $('#demarrer').hide()
                 initialiserJeu();
                 $("#message_alerte").empty();
                 $("#demarrer").attr("disabled", "disabled");
