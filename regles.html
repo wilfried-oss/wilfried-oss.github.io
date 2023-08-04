@@ -13,26 +13,7 @@
     <link rel="stylesheet" href="assets/css/style.css" />
     <!-- endinject -->
     <link rel="shortcut icon" href="assets/images/favicon.ico" />
-    <!-- <link rel="stylesheet" href="assets/css/pendu.css"> -->
-    <style>
-        #mot {
-            font-size: 36px;
-            letter-spacing: 10px;
-            margin: 20px 0;
-        }
-
-        #lettres button {
-            font-size: 24px;
-            margin: 5px;
-        }
-
-        .btn {
-            display: inline-block;
-            margin-right: 10px;
-            /* Espacement entre les boutons */
-            vertical-align: middle;
-        }
-    </style>
+    <link rel="stylesheet" href="assets/css/pendu.css">
     <title>Devinette</title>
 </head>
 
@@ -108,6 +89,10 @@
                     </li>
                 </ul>
             </nav>
+
+
+
+
             <div class="main-panel">
                 <div class="content-wrapper">
                     <div class="page-header">
@@ -115,8 +100,9 @@
                             <span class="page-title-icon bg-gradient-primary text-white mr-2">
                                 <i class="mdi mdi-home"></i>
                             </span>
-                            Jeu de Devinette de Mots
+                            Règles du Jeu
                         </h3>
+
                     </div>
 
                     <!-- CONTENU DE LA PAGE DEBUT -->
@@ -124,16 +110,7 @@
                         <div class="col-md-12 grid-margin stretch-card">
                             <div class="card">
                                 <div class="card-body">
-                                    <button id="demarrer">Démarrer</button>
-                                    <button id="temps">90 </button>
-                                    <button id="score">SCORE : 0</button>
-                                    <div class="mt-3 text-center" id="message_alerte"></div>
-                                    <audio id="audio" src="assets/audio/batiment_mp3_85595.mp3" controls hidden></audio>
-                                    <div class="text-center" id="mot"></div>
-                                    <div class="text-center" id="lettres"></div>
-                                    <div class="text-center">
-                                        <button class="mt-2" id="restart">Rejouer</button>
-                                    </div>
+                                    <h4 class="card-title">Jouez avec Wilfried</h4>
 
                                 </div>
                             </div>
@@ -154,113 +131,7 @@
     <script src="assets/js/off-canvas.js"></script>
     <script src="assets/js/misc.js"></script>
     <script src="assets/js/dashboard.js"></script>
-    <script>
-        $(document).ready(function () {
-            var tempsRestant = 90;
-            var score = 0;
-            var intervalId;
-            var jeuDemarre = false; // Variable pour vérifier si le jeu a démarré
 
-            function mettreAJourTemps() {
-                $("#temps").text(tempsRestant);
-            }
-
-            function mettreAJourScore() {
-                $("#score").text("SCORE : " + score);
-            }
-
-            function demarrerJeu() {
-                jeuDemarre = true; // Marquer que le jeu a démarré
-                intervalId = setInterval(function () {
-                    tempsRestant--;
-                    mettreAJourTemps();
-
-                    if (tempsRestant <= 0) {
-                        clearInterval(intervalId);
-                        var audioElement = document.getElementById('audio');
-                        audioElement.setAttribute('autoplay', 'autoplay');
-                        $("#message_alerte").html('<div class="alert alert-success">SCORE  : ' + score + '</div>');
-                        $("#lettres button").attr("disabled", "disabled");
-                        $('#mot').hide();
-                        $("#restart").attr("disabled", false); // Réactiver le bouton "Restart"
-                    }
-                }, 1000);
-            }
-
-            var mots = ["CHAT", "CHIEN", "ORDINATEUR", "CHEMISE", "BASKET", "LIVRE", "TABLE", "PAPIER", "FRAISE", "TRAIN", "INFORMATIQUE", "CHAISE", "CLAVIER", "SOURIS", "SUCRE", "AVION", "PLANTE", "BANANE", "CRAYON", "MOTO", "FOOTBALL", "BASKETBALL", "PHOTO", "RADIO", "JEU"];
-            var mot, lettres, erreurs, lettresDevinees;
-
-            function initialiserJeu() {
-                clearInterval(intervalId); // Ajoutez cette ligne pour arrêter tout intervalle existant
-                mot = mots[Math.floor(Math.random() * mots.length)];
-                lettres = mot.split("");
-                erreurs = 0;
-                lettresDevinees = [];
-
-                for (var i = 0; i < lettres.length; i++) {
-                    lettresDevinees[i] = "_";
-                }
-
-                $("#mot").html(lettresDevinees.join(" "));
-                $("#lettres button").attr("disabled", false);
-                mettreAJourScore();
-                demarrerJeu();
-            }
-
-            function mettreAJourMotAffiche() {
-                $("#mot").html(lettresDevinees.join(" "));
-            }
-
-            var alphabet = "AZERTYUIOPQSDFGHJKLMWXCVBN".split("");
-
-            for (var i = 0; i < alphabet.length; i++) {
-                var lettre = $("<button>").text(alphabet[i]).attr("id", alphabet[i]);
-                lettre.click(function () {
-                    if (jeuDemarre) { // Vérifier si le jeu a démarré avant de traiter les lettres
-                        var lettreSelectionnee = $(this).attr("id");
-                        var trouve = false;
-
-                        for (var i = 0; i < lettres.length; i++) {
-                            if (lettres[i] === lettreSelectionnee) {
-                                lettresDevinees[i] = lettreSelectionnee;
-                                trouve = true;
-                            }
-                        }
-
-                        if (!trouve) {
-                            erreurs++;
-                            mettreAJourTemps();
-                        }
-
-                        $(this).attr("disabled", "disabled");
-                        mettreAJourMotAffiche();
-
-                        if (lettresDevinees.join("") === mot) {
-                            score += 6;
-                            mettreAJourScore();
-                            initialiserJeu();
-                        }
-                    }
-                });
-
-                $("#lettres").append(lettre);
-            }
-
-            $("#demarrer").click(function () {
-                tempsRestant = 90; // Réinitialise le temps restant
-                initialiserJeu();
-                $("#message_alerte").empty();
-                $("#demarrer").attr("disabled", "disabled");
-                $("#restart").attr("disabled", "disabled");
-            });
-
-            $("#restart").click(function () {
-                location.reload();
-            });
-
-        });
-
-    </script>
 </body>
 
 </html>
